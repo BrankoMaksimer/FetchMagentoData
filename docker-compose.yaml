@@ -1,0 +1,28 @@
+version: '2'
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - "8001:80"
+    volumes:
+      - ./code:/code/
+      - ./conf/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./conf/nginx/conf/:/etc/nginx/conf/
+      - ./conf/nginx/sites/:/etc/nginx/sites/
+    depends_on:
+      - php
+
+  php:
+    build: .
+    volumes:
+      - ./code:/code
+    environment:
+      - php.extension=intl.so
+
+  mongodb1:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - 27020:27017
